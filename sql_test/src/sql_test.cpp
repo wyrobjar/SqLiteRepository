@@ -169,7 +169,7 @@ int main()
 	cout << "Insert DB return : " << rc << endl;
 	*/
 	rc = Test.show();
-	cout << "test : " << Test.test << endl;
+	cout << "test = " << Test.test << endl;
 	cout << "Show DB return : " << rc << endl;
 	Test.close();
 
