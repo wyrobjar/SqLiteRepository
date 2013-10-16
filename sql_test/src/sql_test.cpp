@@ -30,7 +30,6 @@ static char * timer(char *buffer)
 static int callback(void *NotUsed, int argc, char **argv, char **azColName)
 {
    int i;
-   cout << " argc " << argc << " " << (int*)NotUsed << " " << *(int*)NotUsed << endl;
    *(int*)NotUsed = 8;
    for(i=0; i<argc; i++){
       cout << azColName[i] << " " << argv[i] << endl;
@@ -43,7 +42,6 @@ class Database
 	sqlite3 *database;
 public:
 	int test;
-	vector <vector <string>> vec;
 	Database(const char * db_name);
 	~Database();
 	bool open(const char * db_name);
@@ -156,16 +154,11 @@ int main()
 {
 	bool rc;
 	Database Test("Database8.sqlite");
-	//rc = Test.create_db();
-	//cout << "Create DB return : " << rc << endl;
 	/*
+	rc = Test.create_db();
+	cout << "Create DB return : " << rc << endl;
+
 	rc = Test.insert_rec("Ania", 10, "NEW YORK", 15);
-	cout << "Insert DB return : " << rc << endl;
-	rc = Test.insert_rec("Igor", 10, "NEW YORK", 12);
-	cout << "Insert DB return : " << rc << endl;
-	rc = Test.insert_rec("Ola", 10, "NEW YORK", 13);
-	cout << "Insert DB return : " << rc << endl;
-	rc = Test.insert_rec("Marian", 10, "NEW YORK", 16);
 	cout << "Insert DB return : " << rc << endl;
 	*/
 	rc = Test.show();
