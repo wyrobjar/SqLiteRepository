@@ -30,10 +30,18 @@ static char * timer(char *buffer)
 static int callback(void *NotUsed, int argc, char **argv, char **azColName)
 {
    int i;
-   *(int*)NotUsed = 8;
-   for(i=0; i<argc; i++){
-      cout << azColName[i] << " " << argv[i] << endl;
+   vector <vector <string> > * vv_text = static_cast <vector <vector <string> > *>(NotUsed);
+   //*(int*)NotUsed = 8;
+   vector <string> txt;
+   for(i=0; i<argc; i++)
+   {
+	   txt.push_back(azColName[i]);
+	   txt.push_back(argv[i]);
+	   cout << azColName[i] << " " << argv[i] << endl;
+
    }
+   vv_text->push_back(txt);
+   txt.empty();
    return 0;
 }
 
@@ -42,6 +50,7 @@ class Database
 	sqlite3 *database;
 public:
 	int test;
+	vector <vector <string> > vv_text;
 	Database(const char * db_name);
 	~Database();
 	bool open(const char * db_name);
@@ -50,6 +59,7 @@ public:
 	bool insert_rec(string name, int hala, string address, int value);
 	bool insert();
 	bool show();
+	void show_vector();
 	void close();
 };
 
@@ -80,7 +90,7 @@ bool Database::open(const char * db_name)
 bool Database::query(const char * sql_statement)
 {
 	char *zErrMsg = 0;
-	if(SQLITE_OK == sqlite3_exec(database, sql_statement, callback, &test, &zErrMsg))
+	if(SQLITE_OK == sqlite3_exec(database, sql_statement, callback, &vv_text, &zErrMsg))
 	{
 		return true;
 	}
@@ -143,6 +153,20 @@ bool Database::show()
 	return query(sql);
 }
 
+void Database::show_vector()
+{
+	vector< vector <string> >::iterator it;
+	for (it = vv_text.begin(); it < vv_text.end(); ++it)
+	{
+		for (vector<string>::iterator col = it->begin() ; col < it->end(); ++col)
+		{
+			cout << *col << " ";
+			*col += "iterator";
+		}
+		cout << endl;
+	}
+}
+
 void Database::close()
 {
 	sqlite3_close(database);
@@ -154,6 +178,7 @@ int main()
 {
 	bool rc;
 	Database Test("Database8.sqlite");
+
 	/*
 	rc = Test.create_db();
 	cout << "Create DB return : " << rc << endl;
@@ -162,8 +187,10 @@ int main()
 	cout << "Insert DB return : " << rc << endl;
 	*/
 	rc = Test.show();
-	cout << "test = " << Test.test << endl;
 	cout << "Show DB return : " << rc << endl;
+
+	Test.show_vector();
+
 	Test.close();
 
 	return 0;
